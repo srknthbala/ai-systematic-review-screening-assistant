@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Systematic Review Screening Assistant</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <div id="app">
+    <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg>
+    </button>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <!-- Funnel: many records in, few screened out the bottom. -->
+          <svg viewBox="0 0 32 32" fill="none">
+            <defs>
+              <linearGradient id="bm" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#4fd1c5"/>
+                <stop offset="1" stop-color="#1f6f6a"/>
+              </linearGradient>
+            </defs>
+            <path d="M5 7h22L19 17v8l-6 3v-11L5 7Z" fill="url(#bm)"/>
+            <circle cx="24.5" cy="23.5" r="5" fill="var(--sidebar)"/>
+            <path d="M22 23.6l1.8 1.8 3.4-3.6" stroke="#7ee0d5" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <strong>AI Systematic Review<br>Screening Assistant</strong>
+        </span>
+      </div>
+
+      <nav id="nav" aria-label="Workflow">
+        <span class="nav-rail" id="nav-rail" aria-hidden="true"></span>
+        <button class="nav-item" data-view="projects">
+          <span class="ni-num">1</span><span class="ni-label">Projects</span>
+        </button>
+        <button class="nav-item" data-view="criteria">
+          <span class="ni-num">2</span><span class="ni-label">Criteria</span>
+        </button>
+        <button class="nav-item" data-view="import">
+          <span class="ni-num">3</span><span class="ni-label">Import</span>
+        </button>
+        <button class="nav-item" data-view="screen">
+          <span class="ni-num">4</span><span class="ni-label">Screen</span>
+        </button>
+        <button class="nav-item" data-view="results">
+          <span class="ni-num">5</span><span class="ni-label">Results</span>
+        </button>
+        <button class="nav-item" data-view="settings">
+          <span class="ni-num">6</span><span class="ni-label">Settings</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <label class="proj-label" for="project-select">Active project</label>
+        <div class="proj-select-wrap">
+          <select id="project-select" class="proj-select"></select>
+          <svg class="proj-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
+        </div>
+      </div>
+    </aside>
+
+    <div class="scrim" id="scrim" hidden></div>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-head">
+          <h1 id="section-title">Projects</h1>
+          <p class="topbar-sub" id="section-sub"></p>
+        </div>
+        <div id="topbar-right"></div>
+      </header>
+      <section id="view" class="view"></section>
+    </main>
+  </div>
+
+  <div id="toast-wrap" role="status" aria-live="polite"></div>
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/shortcuts.js"></script>
+</body>
+</html>

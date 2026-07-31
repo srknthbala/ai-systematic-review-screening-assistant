@@ -1,0 +1,5 @@
+# Extra dependencies for building the desktop application and installers.
+# Not needed to run the app from source with `python run.py`.
+pywebview>=5.0
+pyinstaller>=6.0
+pillow>=10.0        # renders the app icon in packaging/make_icons.py

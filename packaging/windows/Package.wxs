@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- WiX v5 source for the installer.
+     Built by packaging/windows/build.ps1, which freezes the app with
+     PyInstaller first and then harvests dist\AIScreeningAssistant here. -->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="AI Systematic Review Screening Assistant"
+           Manufacturer="AI Screening"
+           Version="$(var.ProductVersion)"
+           UpgradeCode="0C7EBAD7-FE14-5925-8036-8A1672CB3A12"
+           Scope="perMachine"
+           Compressed="yes">
+
+    <SummaryInformation Description="Local AI-assisted title/abstract screening for systematic reviews" />
+
+    <!-- Replace an older install in place rather than stacking versions. -->
+    <MajorUpgrade DowngradeErrorMessage="A newer version of AI Systematic Review Screening Assistant is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Launch Condition="Installed OR VersionNT64 &gt;= 603"
+            Message="AI Systematic Review Screening Assistant requires 64-bit Windows 10 or later." />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="AI Systematic Review Screening Assistant" />
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="AppMenuDir" Name="AI Systematic Review Screening Assistant" />
+    </StandardDirectory>
+
+    <!-- Harvest the whole PyInstaller output directory. -->
+    <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
+      <Files Include="$(var.PayloadDir)\**" />
+    </ComponentGroup>
+
+    <Component Id="StartMenuShortcut" Directory="AppMenuDir"
+               Guid="8E69C08C-29E6-560C-BB24-09779D7B1F50">
+      <Shortcut Id="AppShortcut"
+                Name="AI Systematic Review Screening Assistant"
+                Description="Title/abstract screening for systematic reviews"
+                Target="[INSTALLFOLDER]AIScreeningAssistant.exe"
+                WorkingDirectory="INSTALLFOLDER" />
+      <RemoveFolder Id="RemoveAppMenuDir" Directory="AppMenuDir" On="uninstall" />
+      <!-- Keypath must be HKLM: this is a perMachine package, so the install
+           runs as SYSTEM and an HKCU value would land in the SYSTEM hive,
+           leaving the component unresolvable for the actual user (repair
+           prompts, and the shortcut potentially orphaned on uninstall). -->
+      <RegistryValue Root="HKLM" Key="Software\AI Systematic Review Screening Assistant"
+                     Name="installed" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+
+    <Feature Id="Main" Title="AI Systematic Review Screening Assistant" Level="1">
+      <ComponentGroupRef Id="AppFiles" />
+      <ComponentRef Id="StartMenuShortcut" />
+    </Feature>
+
+    <!-- Projects, records and the API key live in %APPDATA%\AI Systematic Review Screening Assistant and
+         are deliberately left in place on uninstall. -->
+  </Package>
+</Wix>

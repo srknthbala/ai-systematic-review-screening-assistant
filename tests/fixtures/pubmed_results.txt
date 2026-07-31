@@ -1,0 +1,38 @@
+PMID- 30000001
+OWN - NLM
+TI  - Neuromuscular electrical stimulation improves quadriceps strength in stroke
+      patients.
+AB  - This randomized controlled trial evaluated NMES applied to the quadriceps
+      and measured muscle cross-sectional area at 6 weeks.
+FAU - Lee, Jin Ho
+AU  - Lee JH
+DP  - 2019 Mar
+AID - 10.1000/jstroke.2019.01 [doi]
+LA  - eng
+
+PMID- 30000002
+OWN - NLM
+TI  - Functional electrical stimulation for foot drop after stroke: a randomized trial.
+AB  - We compared FES to ankle-foot orthosis on gait speed in chronic stroke.
+FAU - Kim, Soo
+AU  - Kim S
+DP  - 2020
+LA  - eng
+
+PMID- 30000003
+OWN - NLM
+TI  - Effect of β-alanine and ±10° dorsiflexion on muscle fatigue.
+AB  - Healthy adults supplemented with β-alanine; muscle fatigue measured at −5° and +10°.
+FAU - Müller, Hans
+AU  - Muller H
+DP  - 2018
+AID - 10.1000/abc.2018.99 [doi]
+LA  - eng
+
+PMID- 30000004
+OWN - NLM
+TI  - Sensory-level TENS in healthy volunteers: a feasibility report.
+FAU - Brown, Alice
+AU  - Brown A
+DP  - 2017
+LA  - eng
