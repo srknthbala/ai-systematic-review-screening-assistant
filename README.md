@@ -4,28 +4,9 @@
 
 ## **This tool should be used as a SECOND CHECK on INDIVIDUAL screening you have already done yourself. It should NOT be a standalone screening procedure.**
 
-**Screen your records manually first. Do the whole title/abstract pass yourself,
-record your decisions, and only then run this tool over the same set and compare
-the two.**
-
-**Do NOT use this as a standalone screening step. Do NOT report its output as
-your screening decisions. Do NOT let it decide anything on its own.**
-
-The only thing this is good for is catching what you missed. When it disagrees
-with you, that is a prompt to go back and look at the record again. Sometimes it
-will be right and you will have missed something. Sometimes it will be wrong and
-you will confirm your original call. Either way the decision stays yours, and
-the audit trail you report is the one you produced by hand.
-
-A language model does not read a paper. It pattern-matches a title and an
-abstract against text you wrote. It has no idea what your review is really
-about, it cannot tell a well-run trial from a bad one, and it will produce a
-confident answer whether or not the abstract actually contains enough
-information to decide. Treating that output as a screening pass will corrupt
-your review, and it is not defensible to a reviewer or an editor.
 
 Every major reporting standard expects screening to be done by humans, in
-duplicate. This tool does not satisfy that and does not try to.
+duplicate. This tool does not satisfy that and should only be used for supplementary support.
 
 ---
 
