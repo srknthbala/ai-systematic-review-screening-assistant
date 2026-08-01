@@ -37,7 +37,7 @@ you trigger.
 
 ## Description/How it Works
 
-###Exponentially cheaper, better screening, and more feature capabilities than _Rayyan.ai_.
+### Exponentially cheaper, better screening, and more feature capabilities than _Rayyan.ai_.
 
 Each record is sent to the API on its own, with only your criteria and that one
 title and abstract. Decisions are independent and reproducible.
