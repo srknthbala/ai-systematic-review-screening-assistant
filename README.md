@@ -2,9 +2,7 @@
 
 ---
 
-# READ THIS FIRST
-
-## **This tool is a SECOND CHECK on screening you have already done yourself. It is NOT a screening procedure.**
+## **This tool should be used as a SECOND CHECK on INDIVIDUAL screening you have already done yourself. It should NOT be a standalone screening procedure.**
 
 **Screen your records manually first. Do the whole title/abstract pass yourself,
 record your decisions, and only then run this tool over the same set and compare
