@@ -38,10 +38,7 @@ Grab the installer for your platform from the
 
 Requires macOS 11 or later.
 
-1. Download `AI-Systematic-Review-Screening-Assistant.dmg`
-2. Open it, then drag the app onto the Applications shortcut
-3. First launch only: right-click the app in Applications and choose **Open**,
-   then confirm
+* Download `AI-Systematic-Review-Screening-Assistant.dmg`
 
 That last step is needed because the app is unsigned. A normal double-click
 gives "cannot be opened because Apple cannot check it for malicious software".
@@ -51,10 +48,7 @@ You only have to do the right-click once.
 
 Requires 64-bit Windows 10 or later.
 
-1. Download `AI-Systematic-Review-Screening-Assistant.msi`
-2. Run it. It installs to Program Files and adds a Start menu shortcut
-3. SmartScreen will show a blue warning because the installer is unsigned.
-   Choose **More info**, then **Run anyway**
+* Download `AI-Systematic-Review-Screening-Assistant.msi`
 
 ### What is not bundled
 
@@ -62,32 +56,13 @@ The installers are self-contained. They carry their own Python runtime, all
 libraries, the interface, and the typeface. You do not need to install Python
 or anything else to run the app.
 
-Three things are still on you:
-
-**An Anthropic API key.** Required. The app does nothing without one. Get it
-from [console.anthropic.com](https://console.anthropic.com), then paste it into
-the Settings screen. This is a paid API and you are billed for what you use.
-The key is separate from a Claude.ai or Claude Code subscription, and having one
-of those does not give you API access.
-
-**An internet connection**, but only while screening. Everything else works
-offline.
-
-**Windows only: the Microsoft Edge WebView2 Runtime.** This is what draws the
-app window. It ships with Windows 11 and with current Windows 10, so it is
-almost certainly already there. If the app installs but the window opens blank,
-install the Evergreen Runtime from
-[Microsoft](https://developer.microsoft.com/microsoft-edge/webview2/) and launch
-again. macOS needs no equivalent, since WKWebView is part of the system.
+**Windows only: the Microsoft Edge WebView2 Runtime.** 
+Install the Evergreen Runtime from
+[Microsoft](https://developer.microsoft.com/microsoft-edge/webview2/)
 
 Your projects, records, decisions and API key are stored on your own machine and
 are never uploaded anywhere. The only outbound traffic is the screening calls
 you trigger.
-
-- macOS: `~/Library/Application Support/AI Systematic Review Screening Assistant/`
-- Windows: `%APPDATA%\AI Systematic Review Screening Assistant\`
-
-These survive upgrading and uninstalling.
 
 ## How it works, and how to use it
 
