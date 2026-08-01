@@ -2,7 +2,7 @@
 
 ---
 
-> ## **This tool should be used as a SECOND CHECK on INDIVIDUAL screening you have already done yourself. It should NOT be a standalone screening procedure.**
+## **This tool should be used as a SECOND CHECK on INDIVIDUAL screening you have already done yourself. It should NOT be a standalone screening procedure.**
 
 
 Every major reporting standard expects screening to be done by humans, in
@@ -35,11 +35,12 @@ Your projects, records, decisions and API key are stored on your own machine and
 are never uploaded anywhere. The only outbound traffic is the screening calls
 you trigger.
 
-## How it works
+## Description/How it Works
+
+Exponentially cheaper, better screening, and more feature capabilities than Rayyan.ai
 
 Each record is sent to the API on its own, with only your criteria and that one
-title and abstract. Decisions
-are independent and reproducible.
+title and abstract. Decisions are independent and reproducible.
 
 Every record comes back as **INCLUDE**, **EXCLUDE** or **MAYBE**, with a
 confidence score and a one-line reason. MAYBE is common by design: it is
