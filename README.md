@@ -1,63 +1,245 @@
 # AI Systematic Review Screening Assistant
 
-A local desktop application for AI-assisted title/abstract screening. Single
-user, runs entirely on your machine (macOS or Windows). Projects, criteria, imported
-records, and screening results all persist in a local SQLite file between runs.
+---
 
-It is built around the Anthropic API: a synchronous **Test run** for sanity-
-checking your criteria on a small sample, and an asynchronous **Full run** using
-the **Message Batches API** (50% cheaper) for the whole set.
+# READ THIS FIRST
+
+## **This tool is a SECOND CHECK on screening you have already done yourself. It is NOT a screening procedure.**
+
+**Screen your records manually first. Do the whole title/abstract pass yourself,
+record your decisions, and only then run this tool over the same set and compare
+the two.**
+
+**Do NOT use this as a standalone screening step. Do NOT report its output as
+your screening decisions. Do NOT let it decide anything on its own.**
+
+The only thing this is good for is catching what you missed. When it disagrees
+with you, that is a prompt to go back and look at the record again. Sometimes it
+will be right and you will have missed something. Sometimes it will be wrong and
+you will confirm your original call. Either way the decision stays yours, and
+the audit trail you report is the one you produced by hand.
+
+A language model does not read a paper. It pattern-matches a title and an
+abstract against text you wrote. It has no idea what your review is really
+about, it cannot tell a well-run trial from a bad one, and it will produce a
+confident answer whether or not the abstract actually contains enough
+information to decide. Treating that output as a screening pass will corrupt
+your review, and it is not defensible to a reviewer or an editor.
+
+Every major reporting standard expects screening to be done by humans, in
+duplicate. This tool does not satisfy that and does not try to.
 
 ---
 
-## Install
+## Download
 
 Grab the installer for your platform from the
-[Releases page](../../releases):
+[Releases page](../../releases).
 
-| Platform | File | Installs to |
-|---|---|---|
-| macOS 11+ | `AI-Screening-Assistant-VERSION.dmg` | drag to Applications |
-| Windows 10/11 64-bit | `AI-Screening-Assistant-VERSION.msi` | `Program Files` + Start menu |
+### macOS
 
-On macOS, open the `.dmg` and drag the app onto the Applications shortcut.
-On Windows, run the `.msi`.
+Requires macOS 11 or later.
 
-Both are **unsigned**, so the OS will object the first time:
+1. Download `AI-Systematic-Review-Screening-Assistant.dmg`
+2. Open it, then drag the app onto the Applications shortcut
+3. First launch only: right-click the app in Applications and choose **Open**,
+   then confirm
 
-- **macOS:** launching gives "cannot be opened because Apple cannot check it".
-  Right-click the app in Applications, choose **Open**, then confirm. You only
-  do this once.
-- **Windows:** SmartScreen shows a blue warning. Choose **More info**, then
-  **Run anyway**.
+That last step is needed because the app is unsigned. A normal double-click
+gives "cannot be opened because Apple cannot check it for malicious software".
+You only have to do the right-click once.
 
-Signing them away needs an Apple Developer ID (99 USD/year) and a Windows
-code-signing certificate. The build scripts take both if you have them.
+### Windows
 
-Your data lives outside the application and survives upgrades and uninstalls:
+Requires 64-bit Windows 10 or later.
+
+1. Download `AI-Systematic-Review-Screening-Assistant.msi`
+2. Run it. It installs to Program Files and adds a Start menu shortcut
+3. SmartScreen will show a blue warning because the installer is unsigned.
+   Choose **More info**, then **Run anyway**
+
+### What is not bundled
+
+The installers are self-contained. They carry their own Python runtime, all
+libraries, the interface, and the typeface. You do not need to install Python
+or anything else to run the app.
+
+Three things are still on you:
+
+**An Anthropic API key.** Required. The app does nothing without one. Get it
+from [console.anthropic.com](https://console.anthropic.com), then paste it into
+the Settings screen. This is a paid API and you are billed for what you use.
+The key is separate from a Claude.ai or Claude Code subscription, and having one
+of those does not give you API access.
+
+**An internet connection**, but only while screening. Everything else works
+offline.
+
+**Windows only: the Microsoft Edge WebView2 Runtime.** This is what draws the
+app window. It ships with Windows 11 and with current Windows 10, so it is
+almost certainly already there. If the app installs but the window opens blank,
+install the Evergreen Runtime from
+[Microsoft](https://developer.microsoft.com/microsoft-edge/webview2/) and launch
+again. macOS needs no equivalent, since WKWebView is part of the system.
+
+Your projects, records, decisions and API key are stored on your own machine and
+are never uploaded anywhere. The only outbound traffic is the screening calls
+you trigger.
 
 - macOS: `~/Library/Application Support/AI Systematic Review Screening Assistant/`
 - Windows: `%APPDATA%\AI Systematic Review Screening Assistant\`
 
-### Keyboard shortcuts
+These survive upgrading and uninstalling.
+
+## How it works, and how to use it
+
+You import your database exports, write your PICOS criteria into the app, and it
+sends each record to the Anthropic API one at a time. Each record is judged in
+its own request containing only your criteria and that single title and
+abstract. No other study, no earlier decision, no conversation history. The
+model is told explicitly that it has no memory of anything else. That makes
+every decision independent and reproducible rather than drifting as it works
+through a list.
+
+Each record comes back as INCLUDE, EXCLUDE or MAYBE, with a confidence number
+and a one-line reason. MAYBE is deliberately common. The model is instructed to
+return it whenever the abstract is missing, the population or intervention is
+ambiguous, or the call genuinely cannot be made from an abstract alone. It is
+also told that anything only answerable from the full text, such as whether the
+numeric data are sufficient or whether a washout was long enough, must never be
+an EXCLUDE at this stage.
+
+The intended workflow is:
+
+1. Screen your records yourself, by hand, and record your decisions
+2. Import the same records here and run the tool
+3. Export the results and compare them against your own, record by record
+4. For every disagreement, go back to the record and decide again yourself
+5. Report your own decisions, not the tool's
+
+If you find yourself skipping step 1, stop. The output is not a screening pass,
+and the disagreements are the entire point. A run where you agree with
+everything told you nothing.
+
+## Walkthrough
+
+The sidebar is a six step workflow. Steps show a tick once complete, so you can
+see where you are.
+
+### 1. Projects
+
+Create a review. The fields mirror Covidence review settings: review name,
+review type, question type, area of research, and free-text notes. Everything
+else in the app is scoped to whichever project is active, and you can keep
+several and switch between them from the selector at the bottom of the sidebar.
+
+![Projects screen](pics/Projects_Screen.png)
+
+### 2. Criteria
+
+Write your PICOS criteria. Six categories, each with a paired include and
+exclude box, twelve boxes in total. Changes save automatically.
+
+![Criteria screen](pics/Criteria_Screen.png)
+
+Population, Intervention/Exposure, Comparator/Context, Outcome, Study
+Characteristics, and Other. Be specific. These boxes are the entire basis for
+every decision the tool makes, and vague criteria produce vague screening.
+
+![All six PICOS categories](pics/full_pico_screenshot_in_criteria_screen.png)
+
+Optionally, keep a list of exclusion reason categories. If the list has anything
+in it, every EXCLUDE and MAYBE gets tagged with the single best-fit reason from
+your list, which is what you want for a PRISMA flow diagram. Leave it empty and
+the model writes a free-text reason instead.
+
+![Full-text exclusion reasons](pics/full_text_exclusion_reasons_screenshot_in_criteria_screen.png)
+
+### 3. Import
+
+Drop in your `.ris` and `.txt` (PubMed/MEDLINE) exports. The format is detected
+from the file contents, and the source database is guessed from the filename so
+you can correct it before importing.
+
+![Import screen](pics/imports_screen.png)
+
+After importing you get deduplication counts ready for a PRISMA diagram: records
+identified, duplicates removed, unique records left, and a per-database
+breakdown. Deduplication runs in layers, first exact DOI, then PMID, then a
+fuzzy title match for records missing both identifiers, which also requires the
+same year and the same first author surname.
+
+Borderline fuzzy matches are not merged silently. Anything in the uncertain band
+goes to a review queue for you to confirm or split by hand.
+
+![Deduplication summary after import](pics/Projects_Screen_w_RIS_uploaded_showing_dups.png)
+
+### 4. Screen
+
+Two modes.
+
+**Mode A, Test run.** Screens a small sample live so you can sanity-check your
+criteria before spending money on the whole set. Always do this first. If the
+sample decisions look wrong, the problem is your criteria, and fixing them now
+costs nothing.
+
+**Mode B, Full run.** Submits every unscreened record through the Message
+Batches API, which costs half as much and returns within 24 hours, usually much
+sooner. You can close the app while it runs. Progress is saved as results come
+back, so nothing is lost if you quit or crash, and re-running skips records that
+are already screened.
+
+The panel at the top warns you about anything missing, such as an unset API key
+or empty criteria, before you spend anything.
+
+![Screen screen](pics/Screen_Screen.png)
+
+### 5. Results
+
+Every decision in a filterable table: decision, confidence, title, year, source
+databases, reason, category and tags. Filter by decision, exclusion category,
+tag, or whether the record had an abstract at all.
+
+Three exports:
+
+- **RIS**, the includes (and optionally maybes), ready to load straight into
+  Covidence, Rayyan or EndNote for full-text screening
+- **CSV**, the decision table as a spreadsheet, with abstracts optional
+- **PRISMA counts**, stage-by-stage numbers for your flow diagram
+
+This is the screen you use for the comparison against your own decisions. Export
+the CSV and put it next to your manual results.
+
+![Results screen](pics/Results_Screen.png)
+
+### 6. Settings
+
+Paste your Anthropic API key, pick a model, and run a connection test that makes
+one tiny call to confirm the key and model both work.
+
+The key is stored locally in `secrets.local.json` alongside your database, with
+restricted file permissions, and is never shown back to you in full. It is not
+committed anywhere and it is separate from any Claude.ai or Claude Code login.
+
+![Settings screen](pics/Settings_Screen.png)
+
+## Keyboard shortcuts
 
 `Ctrl` on Windows, `Cmd` on macOS.
 
 | | |
 |---|---|
 | Zoom in / out / reset | `+` / `-` / `0`, or Ctrl and scroll wheel |
-| Find in page | `F`, then `Enter` / `Shift+Enter` to cycle |
+| Find in page | `F`, then `Enter` / `Shift+Enter` to cycle matches |
 | Jump to a section | `1` to `6` |
 | Reload | `R` |
 | Close find or dialog | `Esc` |
-| Show this list | `/` or `?` |
+| Show the shortcut list | `/` or `?` |
 
 ## Building from source
 
-The app ships as an installer; there is no browser mode and no dev server.
-If you want to build it yourself you need **Python 3.11** and the matching OS,
-because neither installer format can be produced from the other platform and
-PyInstaller cannot cross-compile.
+You need Python 3.11 and the matching operating system. Neither installer can be
+built from the other platform, because PyInstaller cannot cross-compile.
 
 ```bash
 # macOS, produces dist/AI-Screening-Assistant-1.0.0.dmg
@@ -68,197 +250,33 @@ pip install -r requirements.txt -r requirements-desktop.txt
 
 ```powershell
 # Windows, produces dist\AI-Screening-Assistant-1.0.0.msi
-# (installs the WiX v5 CLI via dotnet tool if it is missing)
 python -m venv .venv; .venv\Scripts\Activate.ps1
 pip install -r requirements.txt -r requirements-desktop.txt
 powershell -ExecutionPolicy Bypass -File packaging\windows\build.ps1 -Version 1.0.0
 ```
 
-To run the app without packaging it, from a checkout:
+To run without packaging, `python desktop.py` opens the same window. Data goes
+to `./data` instead of the per-user location.
 
-```bash
-pip install -r requirements.txt -r requirements-desktop.txt
-python desktop.py
-```
-
-That opens the same native window the installed app does. Data goes to `./data`
-instead of the per-user location.
-
-CI builds both installers on their native runners, see
-`.github/workflows/release.yml`. Push a tag to cut a release:
+CI builds both installers on their own runners. Push a tag to cut a release:
 
 ```bash
 git tag v1.0.0 && git push origin v1.0.0
 ```
 
-### First-time setup (inside the app)
+## Tests
 
-1. **Settings** → paste your Anthropic API key, pick a model, click
-   **Test connection**. The key is stored locally in `secrets.local.json`
-   (file permissions `0600`) next to the database, never in the repo, and is
-   **separate from any Claude Code or Claude.ai login**.
-2. **Projects** → create a project (the active project scopes everything else).
-3. **Criteria** → fill in the 12 PICOS boxes; optionally add full-text
-   exclusion-reason categories.
-4. **Import** → upload your `.ris` / `.txt` files, confirm the source label per
-   file, import. Review the dedup counts and any borderline merges.
-5. **Screen** → run a small **Test run** first, then submit the **Full run**.
-6. **Results** → filter, read, and export: RIS for the records you are
-   carrying into full-text screening, CSV for the decision table, and a
-   stage/count CSV for your PRISMA flow.
-
----
-
-## The workflow in detail
-
-### Projects
-Multiple projects, each storing Covidence-style review settings (review name,
-review type, question type, area of research, free-text notes). All criteria,
-imports, and results are scoped to the selected project.
-
-### Criteria
-Six PICOS categories (Population, Intervention/Exposure, Comparator/Context,
-Outcome, Study Characteristics, Other), each with an Include and an Exclude box
-(12 boxes total). Changes auto-save to the active project.
-
-Optionally maintain a **full-text exclusion-reason list** (e.g. "Wrong
-population", "Animal study", "No muscle morphology outcome"). If the list is
-non-empty, every EXCLUDE/MAYBE is tagged with the single best-fit reason from the
-list. If empty, the model writes a free-text reason instead.
-
-### Import & deduplication
-Accepts `.ris` and `.txt` (PubMed/MEDLINE). Format is auto-detected by content
-signature (RIS opens with `TY  - ` and closes with `ER  - `; MEDLINE uses
-4-char tags like `PMID- `, `TI  - `), with a filename-extension fallback you can
-override per file. The **source database** is inferred from the filename and is
-editable before import.
-
-Text is normalized to ASCII (Greek letters spelled out, en/em dashes and smart
-quotes folded, accents stripped). Records with no abstract are flagged (they
-cannot be content-screened and tend toward MAYBE).
-
-Deduplication runs in layered order:
-
-1. **Exact DOI** match.
-2. **PMID** match (for records not already merged by DOI).
-3. **Fuzzy title** match for records missing *both* identifiers: lowercased,
-   punctuation/whitespace stripped, **requiring the same year and the same
-   first-author surname**.
-
-Thresholds (in `app/services/dedup.py`, easy to edit):
-
-- Pairs with similarity **> 0.93** (and matching year + first author) auto-merge.
-- Pairs in the **0.88–0.93** borderline band go to a **"Review these merges"**
-  queue instead of being silently merged, so you confirm or split each one.
-
-Every merge is logged. A surviving record records **all** databases it appeared
-in. The Import screen shows total-in / duplicates-removed / unique-out and a
-per-database breakdown for your PRISMA diagram.
-
-### Screening
-
-**Independence.** Each record is screened in its own request containing only the
-criteria (as a cached system block) plus that single title/abstract, with no other
-study, no prior decision, no conversation history. The model is explicitly told
-it has no memory of other records. Every decision is therefore independent and
-reproducible (temperature 0).
-
-Both modes return this exact JSON per record:
-
-```json
-{ "decision": "INCLUDE" | "EXCLUDE" | "MAYBE",
-  "confidence": 0.0,
-  "reason": "one short line",
-  "exclusion_reason_category": "<one item from your reason list, or null>",
-  "tags": [] }
-```
-
-Rules baked into the system prompt: three-way decisions (MAYBE when the abstract
-is missing, the P/I/C is ambiguous, or it can't be decided from the abstract
-alone); title/abstract-stage exclusions only (full-text-only concerns such as
-effect-size data, exact post-baseline timing, or washout adequacy return MAYBE,
-never EXCLUDE); and auto-tagging of "Confound: BFR", "Confound: Protein
-supplementation", and "Spasticity present" when present in the abstract.
-
-- **Mode A, Test run (synchronous):** screen a small sample (default 25) live
-  with a progress bar.
-- **Mode B, Full run (Message Batches API):** submit all unscreened records
-  asynchronously; returns within 24h (usually much faster). The `batch_id` is
-  persisted, so you can **close and reopen the app** while it runs and it resumes
-  polling. Results are written incrementally; a crash or close never loses
-  progress, and re-running skips already-screened records.
-
-**Cost.** Prompt caching is applied to the (identical) criteria block, which
-stacks with the batch discount, roughly 95% off input tokens for cached batch
-requests.
-
-### Results
-A filterable table (title, year, source databases, decision, confidence, reason,
-exclusion category, tags, DOI, PMID, has-abstract). Filter by decision (see all
-MAYBEs in one pass), tag, exclusion category, and abstract presence. Summary
-counts at the top feed your PRISMA diagram. **Export to CSV** respects the active
-filters.
-
-### Settings
-API key (stored locally, masked, removable), model dropdown
-(`claude-sonnet-4-6` default, `claude-haiku-4-5` cheapest, `claude-opus-4-8`
-most capable), and a one-call **Test connection** button. The key does not
-determine the model. The model is chosen here per request.
-
----
-
-## Notes & troubleshooting
-
-- **Data location.** Everything lives in `data/screening.db`. Delete it to start
-  clean. Back it up to keep your work.
-- **Your key never leaves your machine** except in calls to the Anthropic API.
-  `secrets.local.json` and `data/` are gitignored.
-- **Model id rejected?** Model identifiers occasionally change. Edit the `MODELS`
-  list in `app/config.py` and restart.
-- **Adding more files later** re-runs dedup across the whole project (use
-  "Re-run dedup" on the Import screen).
-- This is a research-preview practice tool; always have a human review the
-  model's INCLUDE/MAYBE decisions before relying on them.
-
-## Project layout
-
-```
-ai-screening/
-├── requirements.txt
-├── app/
-│   ├── main.py            # FastAPI app + static SPA
-│   ├── config.py          # paths, model list, local secret handling
-│   ├── db.py              # SQLite schema + helpers
-│   ├── routers/           # projects, criteria, imports, screen, results, settings
-│   ├── services/          # ris_parser, normalize, dedup, importer,
-│   │                      #   anthropic_client, screener, batches,
-│   │                      #   exporters (RIS + PRISMA)
-│   └── static/            # index.html, css, js, bundled typeface
-├── packaging/             # PyInstaller spec, icon generator,
-│                          #   .dmg and .msi build scripts
-├── desktop.py             # native window shell (pywebview)
-├── data/                  # screening.db (created at runtime, gitignored)
-└── tests/                 # parser/dedup, screening, results. Run with python
-```
-
-## Running the tests
+Plain scripts, no pytest, no API key or network needed.
 
 ```bash
-python tests/test_import_dedup.py    # parsing + layered dedup
-python tests/test_screen.py          # JSON parsing, independence, sync + batch
-python tests/test_results.py         # results filters + CSV export
+python tests/test_import_dedup.py    # parsing and layered dedup
+python tests/test_screen.py          # JSON parsing, independence, sync and batch
+python tests/test_results.py         # results filters and exports
 ```
-
-The screening tests use an injected fake client, so they run without an API key
-or network access.
 
 ## Credits
 
 The interface is set in **Karrik** by Jean-Baptiste Morizot and Lucas Le Bihan,
-published by [Velvetyne](https://velvetyne.fr/fonts/karrik/). It is a
-vernacular sans that keeps the weight disadjustments and uneven letter widths
-of the anonymous early grotesques it draws from, which is the reason it is
-here rather than a neutral UI face.
-
-Karrik is used under the SIL Open Font License 1.1. The font files and the
-full licence text ship with the app in `app/static/fonts/`.
+published by [Velvetyne](https://velvetyne.fr/fonts/karrik/), used under the SIL
+Open Font License 1.1. The font files and the licence text ship with the app in
+`app/static/fonts/`.
