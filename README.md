@@ -2,7 +2,6 @@
 
 ---
 
-> [!CAUTION]
 > ## **This tool should be used as a SECOND CHECK on INDIVIDUAL screening you have already done yourself. It should NOT be a standalone screening procedure.**
 
 
