@@ -2,53 +2,48 @@
 
 ---
 
-```diff
-- SECOND CHECK ONLY. NOT A STANDALONE SCREENING PROCEDURE.
-- Screen your records yourself first, then run this and compare.
-```
+## **This tool should be used as a SECOND CHECK on INDIVIDUAL screening you have already done yourself. It should NOT be a standalone screening procedure.**
 
-> [!CAUTION]
-> **This tool should be used as a SECOND CHECK on INDIVIDUAL screening you have
-> already done yourself. It should NOT be a standalone screening procedure.**
->
-> Every major reporting standard expects screening to be done by humans, in
-> duplicate. This tool does not satisfy that and should only be used for
-> supplementary support.
+
+Every major reporting standard expects screening to be done by humans, in
+duplicate. This tool does not satisfy that and should only be used for supplementary support.
 
 ---
 
 ## Download
 
-From the [Releases page](../../releases).
+Grab the installer for your platform from the
+[Releases page](../../releases).
 
-| | | |
-|---|---|---|
-| **macOS 11+** | `AI-Systematic-Review-Screening-Assistant.dmg` | Open it, drag the app to Applications |
-| **Windows 10+ (64-bit)** | `AI-Systematic-Review-Screening-Assistant.msi` | Run it |
+### macOS
 
-Both are unsigned, so the OS complains once:
+Requires macOS 11 or later.
 
-- **macOS:** right-click the app in Applications, choose **Open**, confirm. Once only.
-- **Windows:** SmartScreen warning, choose **More info**, then **Run anyway**.
+* Download `AI-Systematic-Review-Screening-Assistant.dmg`
 
-### What you still need
+That last step is needed because the app is unsigned. A normal double-click
+gives "cannot be opened because Apple cannot check it for malicious software".
+You only have to do the right-click once.
 
-- **An Anthropic API key.** Required. The app does nothing without it. Get one
-  at [console.anthropic.com](https://console.anthropic.com) and paste it into
-  Settings. You are billed for usage. A Claude.ai or Claude Code subscription
-  does **not** give you API access.
-- **Internet**, but only while screening.
-- **Windows only:** the [Edge WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/).
-  Already on Windows 11 and current Windows 10. Only install it if the app opens
-  to a blank window.
+### Windows
 
-Everything else is bundled. No Python install needed.
+Requires 64-bit Windows 10 or later.
 
-Your data stays on your machine and is never uploaded. The only outbound traffic
-is the screening calls you trigger.
+* Download `AI-Systematic-Review-Screening-Assistant.msi`
 
-- macOS: `~/Library/Application Support/AI Systematic Review Screening Assistant/`
-- Windows: `%APPDATA%\AI Systematic Review Screening Assistant\`
+### What is not bundled
+
+The installers are self-contained. They carry their own Python runtime, all
+libraries, the interface, and the typeface. You do not need to install Python
+or anything else to run the app.
+
+**Windows only: the Microsoft Edge WebView2 Runtime.** 
+Install the Evergreen Runtime from
+[Microsoft](https://developer.microsoft.com/microsoft-edge/webview2/)
+
+Your projects, records, decisions and API key are stored on your own machine and
+are never uploaded anywhere. The only outbound traffic is the screening calls
+you trigger.
 
 ## How it works
 
