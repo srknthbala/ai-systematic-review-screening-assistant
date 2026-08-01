@@ -2,7 +2,10 @@
 
 ---
 
-## **This tool should be used as a SECOND CHECK on INDIVIDUAL screening you have already done yourself. It should NOT be a standalone screening procedure.**
+```diff
+- This tool should be used as a SECOND CHECK on INDIVIDUAL screening you have already done yourself.
+- It should NOT be a standalone screening procedure.
+```
 
 
 Every major reporting standard expects screening to be done by humans, in
@@ -21,21 +24,11 @@ Requires macOS 11 or later.
 
 * Download `AI-Systematic-Review-Screening-Assistant.dmg`
 
-That last step is needed because the app is unsigned. A normal double-click
-gives "cannot be opened because Apple cannot check it for malicious software".
-You only have to do the right-click once.
-
 ### Windows
 
 Requires 64-bit Windows 10 or later.
 
 * Download `AI-Systematic-Review-Screening-Assistant.msi`
-
-### What is not bundled
-
-The installers are self-contained. They carry their own Python runtime, all
-libraries, the interface, and the typeface. You do not need to install Python
-or anything else to run the app.
 
 **Windows only: the Microsoft Edge WebView2 Runtime.** 
 Install the Evergreen Runtime from
