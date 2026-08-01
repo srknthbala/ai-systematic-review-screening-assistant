@@ -39,8 +39,8 @@ you trigger.
 ## How it works
 
 Each record is sent to the API on its own, with only your criteria and that one
-title and abstract. No other study, no earlier decision, no history. Decisions
-are independent and reproducible instead of drifting down a list.
+title and abstract. Decisions
+are independent and reproducible.
 
 Every record comes back as **INCLUDE**, **EXCLUDE** or **MAYBE**, with a
 confidence score and a one-line reason. MAYBE is common by design: it is
